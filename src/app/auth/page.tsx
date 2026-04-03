@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function AuthPage() {
   const router = useRouter();
@@ -38,6 +39,9 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
+        <Link href="/" className="inline-flex items-center gap-1 text-gray-500 hover:text-gray-300 text-sm mb-6 transition-colors">
+          ← Back
+        </Link>
         <div className="text-center mb-8">
           <div className="text-5xl mb-3">⛳</div>
           <h1 className="text-2xl font-bold text-white">Masters Pool 2026</h1>
