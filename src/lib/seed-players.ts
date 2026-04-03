@@ -59,7 +59,7 @@ const PLAYERS = [
   { name: 'Matthieu Pavon',      odds: '+30000', odds_value: 30000, group_number: 7, world_rank: 68 },
   // Group 8: Odds ranks 50-56
   { name: 'Brendan Steele',      odds: '+35000', odds_value: 35000, group_number: 8, world_rank: 85 },
-  { name: 'Tiger Woods',         odds: '+40000', odds_value: 40000, group_number: 8, world_rank: 999 },
+  { name: 'Sergio Garcia',        odds: '+40000', odds_value: 40000, group_number: 8, world_rank: 999 },
   { name: 'Phil Mickelson',      odds: '+50000', odds_value: 50000, group_number: 8, world_rank: 999 },
   { name: 'Bernhard Langer',     odds: '+80000', odds_value: 80000, group_number: 8, world_rank: 999 },
   { name: 'Fred Couples',        odds: '+100000',odds_value: 100000,group_number: 8, world_rank: 999 },
