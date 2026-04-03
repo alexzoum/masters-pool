@@ -41,16 +41,6 @@ function formatScore(score: number | null, status?: string | null): string {
   return score > 0 ? `+${score}` : `${score}`;
 }
 
-const GROUP_LABELS = [
-  'Group 1 — Top Favorites (Odds 1–7)',
-  'Group 2 — Contenders (Odds 8–14)',
-  'Group 3 — Strong Field (Odds 15–21)',
-  'Group 4 — Solid Picks (Odds 22–28)',
-  'Group 5 — Dark Horses (Odds 29–35)',
-  'Group 6 — Value Plays (Odds 36–42)',
-  'Group 7 — Longshots (Odds 43–49)',
-  'Group 8 — Past Champions (Odds 50–56)',
-];
 
 export default function PicksPage() {
   const router = useRouter();
@@ -244,7 +234,7 @@ export default function PicksPage() {
                   <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
                     <div>
                       <span className="text-white font-semibold text-sm">
-                        {GROUP_LABELS[gNum - 1] || `Group ${gNum}`}
+                        {`Group ${gNum}`}
                       </span>
                     </div>
                     {picked && (

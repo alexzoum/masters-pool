@@ -59,6 +59,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, eventId });
   }
 
+  if (body.action === 'reseed_players') {
+    await sql`DELETE FROM picks`;
+    await sql`DELETE FROM player_scores`;
+    await sql`DELETE FROM players`;
+    const { seedPlayers } = await import('@/lib/seed-players');
+    await seedPlayers();
+    return NextResponse.json({ ok: true });
+  }
+
   if (body.action === 'set_player_score') {
     const { player_id, total_score, status: pStatus, r1, r2, r3, r4 } = body;
     await sql`

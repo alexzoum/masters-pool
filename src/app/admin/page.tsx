@@ -202,6 +202,23 @@ export default function AdminPage() {
           )}
         </div>
 
+        {/* Reseed players */}
+        <div className="bg-gray-900 rounded-xl border border-gray-800 p-5">
+          <h2 className="text-white font-semibold mb-1">Player Field</h2>
+          <p className="text-gray-400 text-sm mb-4">
+            Re-seed wipes all players, picks, and scores and reloads the field from code. Only use before the tournament starts.
+          </p>
+          <button
+            onClick={() => {
+              if (confirm('This will delete all picks and scores. Are you sure?'))
+                doAction({ action: 'reseed_players' });
+            }}
+            className="bg-red-800 hover:bg-red-700 text-white text-sm px-5 py-2 rounded-lg transition-colors font-medium"
+          >
+            Re-seed Player Field
+          </button>
+        </div>
+
         {/* Users */}
         <div className="bg-gray-900 rounded-xl border border-gray-800 p-5">
           <h2 className="text-white font-semibold mb-4">Users ({users.length})</h2>
