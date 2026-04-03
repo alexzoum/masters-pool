@@ -1,19 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import { getDb } from '@/lib/db';
+import { sql, ensureSchema } from '@/lib/db';
 import { seedPlayers } from '@/lib/seed-players';
 import { createSession, setSessionCookie } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
   const { username, password } = await req.json();
 
-  const db = getDb();
-  seedPlayers();
+  await ensureSchema();
+  await seedPlayers();
 
-  const row = db
-    .prepare('SELECT id, username, password_hash, is_admin FROM users WHERE username = ?')
-    .get(username) as { id: number; username: string; password_hash: string; is_admin: number } | undefined;
+  const rows = await sql`
+    SELECT id, username, password_hash, is_admin FROM users WHERE LOWER(username) = LOWER(${username})
+  ` as unknown as { id: number; username: string; password_hash: string; is_admin: number }[];
 
+  const row = rows[0];
   if (!row || !(await bcrypt.compare(password, row.password_hash))) {
     return NextResponse.json({ error: 'Invalid username or password' }, { status: 401 });
   }

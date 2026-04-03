@@ -1,14 +1,12 @@
 import { NextResponse } from 'next/server';
-import { getDb } from '@/lib/db';
+import { sql } from '@/lib/db';
 import { fetchAndUpdateScores } from '@/lib/golf-api';
 
 export async function POST() {
-  const db = getDb();
-  const state = db
-    .prepare('SELECT espn_event_id, status FROM tournament_state WHERE id = 1')
-    .get() as { espn_event_id: string; status: string };
+  const states = await sql`SELECT espn_event_id, status FROM tournament_state WHERE id = 1`;
+  const state = states[0] as { espn_event_id: string; status: string } | undefined;
 
-  if (state.status === 'pre') {
+  if (!state || state.status === 'pre') {
     return NextResponse.json({ error: 'Tournament not started' }, { status: 400 });
   }
 
@@ -25,17 +23,14 @@ export async function POST() {
 }
 
 export async function GET() {
-  const db = getDb();
-  const scores = db
-    .prepare(`
-      SELECT p.id, p.name, p.group_number, p.odds,
-             ps.total_score, ps.r1, ps.r2, ps.r3, ps.r4,
-             ps.position, ps.status, ps.last_updated
-      FROM players p
-      LEFT JOIN player_scores ps ON ps.player_id = p.id
-      ORDER BY p.group_number, p.odds_rank
-    `)
-    .all();
+  const scores = await sql`
+    SELECT p.id, p.name, p.group_number, p.odds,
+           ps.total_score, ps.r1, ps.r2, ps.r3, ps.r4,
+           ps.position, ps.status, ps.last_updated
+    FROM players p
+    LEFT JOIN player_scores ps ON ps.player_id = p.id
+    ORDER BY p.group_number, p.odds_rank
+  `;
 
   return NextResponse.json({ scores });
 }
