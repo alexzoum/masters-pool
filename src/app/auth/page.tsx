@@ -51,6 +51,7 @@ export default function AuthPage() {
         <div className="bg-gray-900 rounded-xl border border-gray-800 p-6">
           <div className="flex rounded-lg bg-gray-800 p-1 mb-6">
             <button
+              type="button"
               onClick={() => { setMode('login'); setError(''); }}
               className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-colors ${
                 mode === 'login' ? 'bg-white text-gray-900' : 'text-gray-400 hover:text-white'
@@ -59,6 +60,7 @@ export default function AuthPage() {
               Sign in
             </button>
             <button
+              type="button"
               onClick={() => { setMode('register'); setError(''); }}
               className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-colors ${
                 mode === 'register' ? 'bg-white text-gray-900' : 'text-gray-400 hover:text-white'
