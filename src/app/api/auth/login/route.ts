@@ -5,6 +5,7 @@ import { seedPlayers } from '@/lib/seed-players';
 import { createSession, setSessionCookie } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
+  try {
   const { username, password } = await req.json();
 
   await ensureSchema();
@@ -26,4 +27,9 @@ export async function POST(req: NextRequest) {
   const response = NextResponse.json({ user });
   response.cookies.set(cookieOpts);
   return response;
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    console.error('[login]', msg);
+    return NextResponse.json({ error: msg }, { status: 500 });
+  }
 }
