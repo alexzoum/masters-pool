@@ -101,7 +101,7 @@ export default function LeaderboardPage() {
             <h1 className="text-2xl font-bold text-white">Leaderboard</h1>
             <p className="text-gray-400 text-sm mt-0.5">
               {isPre
-                ? 'Tournament starts April 10, 2026 · Make your picks before it begins!'
+                ? 'Tournament starts April 9, 2026 · Make your picks before it begins!'
                 : `Round ${tournState?.current_round || '?'} · Best 5 of 8 picks count`}
             </p>
           </div>
