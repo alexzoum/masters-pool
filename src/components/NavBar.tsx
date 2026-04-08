@@ -29,13 +29,12 @@ export default function NavBar({ user }: { user: NavUser | null }) {
     }`;
 
   return (
-    <nav className="bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
+    <nav className="bg-gray-900 border-b border-gray-800 flex-shrink-0 z-50 overflow-x-auto">
       <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
         <div className="flex items-center gap-1">
           <Link href="/" className="text-green-400 font-bold text-lg mr-4 flex items-center gap-2">
             <span className="text-xl">⛳</span>
             <span>Masters Pool</span>
-            <span className="text-gray-500 text-xs font-normal">2026</span>
           </Link>
           <Link href="/leaderboard" className={linkClass('/leaderboard')}>
             Leaderboard
@@ -72,7 +71,7 @@ export default function NavBar({ user }: { user: NavUser | null }) {
           ) : (
             <Link
               href="/auth"
-              className="text-sm px-3 py-1.5 rounded bg-green-700 hover:bg-green-600 text-white font-medium transition-colors"
+              className="text-sm px-3 py-1.5 rounded bg-green-700 hover:bg-green-600 text-white font-small transition-colors"
             >
               Sign in
             </Link>

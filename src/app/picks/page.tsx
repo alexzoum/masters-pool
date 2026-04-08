@@ -217,7 +217,7 @@ export default function PicksPage() {
         )}
 
         {/* Player groups */}
-        <div className="space-y-4">
+        <div className={`space-y-4 ${locked ? 'pointer-events-none select-none opacity-60' : ''}`}>
           {Object.entries(groups)
             .sort(([a], [b]) => Number(a) - Number(b))
             .map(([groupNum, players]) => {
