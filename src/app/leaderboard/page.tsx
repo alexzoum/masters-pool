@@ -78,7 +78,10 @@ export default function LeaderboardPage() {
   // Auto-refresh during active tournament
   useEffect(() => {
     if (tournState?.status !== 'active') return;
-    const interval = setInterval(loadLeaderboard, 60_000); // every 60s
+    const interval = setInterval(async () => {
+      await fetch('/api/scores', { method: 'POST' });
+      await loadLeaderboard();
+    }, 60_000); // every 60s
     return () => clearInterval(interval);
   }, [tournState, loadLeaderboard]);
 
