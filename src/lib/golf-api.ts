@@ -2,13 +2,13 @@ import { sql } from './db';
 
 interface ESPNCompetitor {
   id: string;
-  displayName: string;
+  athlete?: { displayName?: string };
   status?: {
     type?: { name?: string };
     position?: { displayName?: string };
   };
   statistics?: Array<{ name: string; displayValue: string; value: number }>;
-  linescores?: Array<{ value: number | null }>;
+  linescores?: Array<{ value: number | null; displayValue?: string }>;
 }
 
 interface ESPNEvent {
@@ -36,23 +36,30 @@ export async function fetchAndUpdateScores(eventId: string): Promise<void> {
   const playerMap = new Map(allPlayers.map((p) => [p.name.toLowerCase(), p.id]));
 
   for (const c of competitors) {
-    const playerId = playerMap.get(c.displayName.toLowerCase());
+    const displayName = c.athlete?.displayName;
+    if (!displayName) continue;
+    const playerId = playerMap.get(displayName.toLowerCase());
     if (!playerId) continue;
 
-    const statusType = c.status?.type?.name?.toLowerCase() || 'active';
+    const statusType = c.status?.type?.name?.toUpperCase() || '';
     let status = 'active';
-    if (statusType.includes('cut') || statusType.includes('mc')) status = 'cut';
-    else if (statusType.includes('wd') || statusType.includes('withdraw')) status = 'wd';
+    if (statusType.includes('CUT') || statusType.includes('MC')) status = 'cut';
+    else if (statusType.includes('WITHDRAWN') || statusType.includes('WD')) status = 'wd';
 
     const stats = c.statistics || [];
-    const totalStat = stats.find((s) => s.name === 'toPar' || s.name === 'score');
+    const totalStat = stats.find((s) => s.name === 'scoreToPar');
     const totalScore = totalStat ? Math.round(totalStat.value) : null;
 
     const lines = c.linescores || [];
-    const r1 = lines[0]?.value ?? null;
-    const r2 = lines[1]?.value ?? null;
-    const r3 = lines[2]?.value ?? null;
-    const r4 = lines[3]?.value ?? null;
+    const parseRound = (l: { displayValue?: string } | undefined) => {
+      if (!l?.displayValue) return null;
+      const n = parseInt(l.displayValue, 10);
+      return isNaN(n) ? null : n;
+    };
+    const r1 = parseRound(lines[0]);
+    const r2 = parseRound(lines[1]);
+    const r3 = parseRound(lines[2]);
+    const r4 = parseRound(lines[3]);
     const position = c.status?.position?.displayName || null;
 
     await sql`
