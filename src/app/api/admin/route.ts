@@ -51,6 +51,31 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
+  if (body.action === 'debug_espn_names') {
+    const states = await sql`SELECT espn_event_id FROM tournament_state WHERE id = 1`;
+    const state = states[0] as { espn_event_id: string } | undefined;
+    if (!state?.espn_event_id) return NextResponse.json({ error: 'No ESPN event ID set' }, { status: 400 });
+
+    const normalize = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+    const res = await fetch(
+      `https://site.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga&event=${state.espn_event_id}`,
+      { headers: { 'User-Agent': 'Mozilla/5.0' } }
+    );
+    const data = await res.json();
+    const espnNames: string[] = (data.events?.[0]?.competitions?.[0]?.competitors || [])
+      .map((c: { athlete?: { displayName?: string } }) => c.athlete?.displayName)
+      .filter(Boolean);
+
+    const dbPlayers = await sql`SELECT name FROM players` as unknown as { name: string }[];
+    const dbNormalized = new Map(dbPlayers.map((p) => [normalize(p.name), p.name]));
+
+    const unmatched = espnNames.filter((n) => !dbNormalized.has(normalize(n)));
+    const matched = espnNames.filter((n) => dbNormalized.has(normalize(n)));
+
+    return NextResponse.json({ matched: matched.length, unmatched });
+  }
+
   if (body.action === 'detect_event_id') {
     const eventId = await getCurrentMastersEventId();
     if (eventId) {

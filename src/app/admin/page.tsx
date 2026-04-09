@@ -35,6 +35,7 @@ export default function AdminPage() {
   // Form state
   const [espnId, setEspnId] = useState('');
   const [refreshing, setRefreshing] = useState(false);
+  const [unmatchedNames, setUnmatchedNames] = useState<string[] | null>(null);
 
   const loadAdmin = useCallback(async () => {
     const res = await fetch('/api/admin');
@@ -91,6 +92,17 @@ export default function AdminPage() {
     setRefreshing(true);
     await doAction({ action: 'refresh_scores' });
     setRefreshing(false);
+  }
+
+  async function debugEspnNames() {
+    setUnmatchedNames(null);
+    const res = await fetch('/api/admin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'debug_espn_names' }),
+    });
+    const d = await res.json();
+    setUnmatchedNames(d.unmatched ?? []);
   }
 
   if (loading) {
@@ -196,15 +208,38 @@ export default function AdminPage() {
           <p className="text-gray-400 text-sm mb-4">
             Manually pull latest scores from ESPN. Scores auto-refresh on the leaderboard every 60 seconds during active play.
           </p>
-          <button
-            onClick={refreshScores}
-            disabled={refreshing || !state?.espn_event_id}
-            className="bg-blue-700 hover:bg-blue-600 disabled:opacity-50 text-white text-sm px-5 py-2 rounded-lg transition-colors font-medium"
-          >
-            {refreshing ? 'Refreshing…' : 'Pull Scores from ESPN'}
-          </button>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={refreshScores}
+              disabled={refreshing || !state?.espn_event_id}
+              className="bg-blue-700 hover:bg-blue-600 disabled:opacity-50 text-white text-sm px-5 py-2 rounded-lg transition-colors font-medium"
+            >
+              {refreshing ? 'Refreshing…' : 'Pull Scores from ESPN'}
+            </button>
+            <button
+              onClick={debugEspnNames}
+              disabled={!state?.espn_event_id}
+              className="bg-gray-700 hover:bg-gray-600 disabled:opacity-50 text-gray-200 text-sm px-5 py-2 rounded-lg transition-colors font-medium"
+            >
+              Check Unmatched Names
+            </button>
+          </div>
           {!state?.espn_event_id && (
             <p className="text-xs text-yellow-500 mt-2">Set ESPN Event ID above first</p>
+          )}
+          {unmatchedNames !== null && (
+            <div className="mt-3 text-sm">
+              {unmatchedNames.length === 0 ? (
+                <p className="text-green-400">All ESPN names matched.</p>
+              ) : (
+                <div>
+                  <p className="text-yellow-400 mb-1">ESPN names with no DB match ({unmatchedNames.length}):</p>
+                  <ul className="text-gray-300 space-y-0.5">
+                    {unmatchedNames.map((n) => <li key={n} className="font-mono text-xs">{n}</li>)}
+                  </ul>
+                </div>
+              )}
+            </div>
           )}
         </div>
 

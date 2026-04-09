@@ -52,19 +52,19 @@ const PLAYERS = [
   // Group 7 (odds rank 43-49)
   { name: 'Harris English',      odds: '+9000',  odds_value: 9000,  group_number: 7, world_rank: 21 },
   { name: 'Dustin Johnson',      odds: '+9000',  odds_value: 9000,  group_number: 7, world_rank: 999 },
-  { name: 'Alexander Noren',     odds: '+10000', odds_value: 10000, group_number: 7, world_rank: 19 },
-  { name: 'Matthew McCarty',     odds: '+10000', odds_value: 10000, group_number: 7, world_rank: 46 },
+  { name: 'Alex Noren',          odds: '+10000', odds_value: 10000, group_number: 7, world_rank: 19 },
+  { name: 'Matt McCarty',        odds: '+10000', odds_value: 10000, group_number: 7, world_rank: 46 },
   { name: 'Sergio Garcia',       odds: '+10000', odds_value: 10000, group_number: 7, world_rank: 999 },
   { name: 'Maverick McNealy',    odds: '+11000', odds_value: 11000, group_number: 7, world_rank: 27 },
   { name: 'Ryan Gerard',         odds: '+11000', odds_value: 11000, group_number: 7, world_rank: 28 },
   // Group 8 (odds rank 50-56)
   { name: 'Keegan Bradley',      odds: '+12000', odds_value: 12000, group_number: 8, world_rank: 26 },
   { name: 'Kurt Kitayama',       odds: '+12000', odds_value: 12000, group_number: 8, world_rank: 35 },
-  { name: 'Nicolai Hojgaard',    odds: '+12000', odds_value: 12000, group_number: 8, world_rank: 36 },
+  { name: 'Nicolai Højgaard',    odds: '+12000', odds_value: 12000, group_number: 8, world_rank: 36 },
   { name: 'Ryan Fox',            odds: '+12000', odds_value: 12000, group_number: 8, world_rank: 48 },
   { name: 'Aaron Rai',           odds: '+13000', odds_value: 13000, group_number: 8, world_rank: 40 },
   { name: 'Harry Hall',          odds: '+13000', odds_value: 13000, group_number: 8, world_rank: 59 },
-  { name: 'John Keefer',         odds: '+13000', odds_value: 13000, group_number: 8, world_rank: 60 },
+  { name: 'Johnny Keefer',       odds: '+13000', odds_value: 13000, group_number: 8, world_rank: 60 },
 ];
 
 export async function seedPlayers(): Promise<void> {

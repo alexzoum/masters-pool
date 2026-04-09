@@ -45,13 +45,22 @@ export async function fetchAndUpdateScores(eventId: string): Promise<void> {
   const normalize = (s: string) =>
     s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
+  // ESPN uses different names for some players; map normalized ESPN name → normalized DB name
+  const ESPN_NAME_ALIASES: Record<string, string> = {
+    'alex noren': 'alexander noren',
+    'nicolai h\u00f8jgaard': 'nicolai hojgaard',
+    'matt mccarty': 'matthew mccarty',
+    'johnny keefer': 'john keefer',
+  };
+
   const allPlayers = await sql`SELECT id, name FROM players` as unknown as { id: number; name: string }[];
   const playerMap = new Map(allPlayers.map((p) => [normalize(p.name), p.id]));
 
   for (const c of competitors) {
     const displayName = c.athlete?.displayName;
     if (!displayName) continue;
-    const playerId = playerMap.get(normalize(displayName));
+    const normalizedName = normalize(displayName);
+    const playerId = playerMap.get(ESPN_NAME_ALIASES[normalizedName] ?? normalizedName);
     if (!playerId) continue;
 
     const statusType = c.status?.type?.name?.toUpperCase() || '';
