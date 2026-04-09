@@ -219,8 +219,8 @@ export default function LeaderboardPage() {
                     </div>
 
                     {/* Username */}
-                    <div className="col-span-5 flex items-center gap-2">
-                      <span className={`font-semibold text-sm text-ellipsis ${isCurrentUser ? 'text-green-400' : 'text-white'}`}>
+                    <div className="col-span-5 text-ellipsis flex items-center gap-2">
+                      <span className={`font-semibold text-sm ${isCurrentUser ? 'text-green-400' : 'text-white'}`}>
                         {entry.username}
                         {isCurrentUser && <span className="text-xs text-green-600 ml-1">(you)</span>}
                       </span>
