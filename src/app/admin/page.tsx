@@ -50,6 +50,12 @@ export default function AdminPage() {
   }, [router]);
 
   useEffect(() => {
+    if (state?.status !== 'active') return;
+    const interval = setInterval(loadAdmin, 60 * 60_000);
+    return () => clearInterval(interval);
+  }, [state?.status, loadAdmin]);
+
+  useEffect(() => {
     fetch('/api/auth/me').then(async (r) => {
       if (r.ok) {
         const d = await r.json();

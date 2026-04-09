@@ -14,6 +14,7 @@ interface ESPNCompetitor {
 interface ESPNEvent {
   competitions?: Array<{
     competitors?: ESPNCompetitor[];
+    status?: { period?: number };
   }>;
 }
 
@@ -29,8 +30,17 @@ export async function fetchAndUpdateScores(eventId: string): Promise<void> {
   const event = events[0];
   if (!event?.competitions?.[0]?.competitors) return;
 
-  const competitors = event.competitions[0].competitors;
+  const competition = event.competitions[0];
+  const competitors = competition.competitors!;
   const now = new Date().toISOString();
+
+  const detectedRound = competition.status?.period ?? null;
+  if (detectedRound) {
+    await sql`
+      UPDATE tournament_state SET current_round = ${detectedRound}
+      WHERE id = 1 AND current_round != ${detectedRound}
+    `;
+  }
 
   const allPlayers = await sql`SELECT id, name FROM players` as unknown as { id: number; name: string }[];
   const playerMap = new Map(allPlayers.map((p) => [p.name.toLowerCase(), p.id]));
