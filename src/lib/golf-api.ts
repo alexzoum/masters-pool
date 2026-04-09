@@ -42,13 +42,16 @@ export async function fetchAndUpdateScores(eventId: string): Promise<void> {
     `;
   }
 
+  const normalize = (s: string) =>
+    s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
   const allPlayers = await sql`SELECT id, name FROM players` as unknown as { id: number; name: string }[];
-  const playerMap = new Map(allPlayers.map((p) => [p.name.toLowerCase(), p.id]));
+  const playerMap = new Map(allPlayers.map((p) => [normalize(p.name), p.id]));
 
   for (const c of competitors) {
     const displayName = c.athlete?.displayName;
     if (!displayName) continue;
-    const playerId = playerMap.get(displayName.toLowerCase());
+    const playerId = playerMap.get(normalize(displayName));
     if (!playerId) continue;
 
     const statusType = c.status?.type?.name?.toUpperCase() || '';
