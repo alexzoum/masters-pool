@@ -104,6 +104,9 @@ export default function LeaderboardPage() {
                 ? 'Tournament starts April 9, 2026 · Make your picks before it begins!'
                 : `Round ${tournState?.current_round || '?'} · Best 5 of 8 picks count`}
             </p>
+            <p className="text-gray-500 text-lg font-bold mt-2 text-yellow-400">
+              Make sure to Venmo @zoumzoum $20 by Friday, if not your entry will be disqualified.
+            </p>
           </div>
           <div className="text-right">
             {tournState?.status === 'active' && (
